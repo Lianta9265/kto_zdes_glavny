@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Кто здесь главный? — сортер и падежная лаборатория (версия 7)</title>
+<style>
+:root{
+  --plum:#382242;--plum-deep:#291532;--plum-light:#6d5078;
+  --teal:#0b817a;--teal-dark:#005d59;--mint:#e8f8f3;
+  --amber:#bb7412;--amber-deep:#81510d;--honey:#fff2cb;
+  --coral:#b94155;--soft-coral:#fff1f3;--bg:#f6f6f2;
+  --line:#e7e0e4;--ink:#2e2934;--muted:#6f6775;--white:#fff;
+  --shadow:0 13px 38px rgba(52,35,62,.08);--radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,select{font:inherit}button{cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible+label{outline:3px solid #f0a63d;outline-offset:3px}
+button:disabled{opacity:.55;cursor:default}
+header{color:#fff;background:radial-gradient(circle at 92% -20%,#855d81 0,transparent 35%),linear-gradient(118deg,var(--plum-deep),var(--plum));padding:24px max(20px,calc((100vw - 1100px)/2));box-shadow:0 5px 22px #28163122}
+header .sup{font-size:.78rem;letter-spacing:.12em;color:#f3c676;font-weight:850}
+header h1{margin:4px 0 2px;font-size:clamp(1.7rem,4vw,2.65rem);line-height:1.14;letter-spacing:-.03em}
+header p{margin:4px 0 0;color:#efe1ea;font-weight:500}
+main{width:min(100%,1100px);padding:0 18px;margin:25px auto 55px}
+.page{background:#fff;border:1px solid #ebe5e8;border-radius:var(--radius);padding:clamp(17px,3.2vw,32px);box-shadow:var(--shadow)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.top .count{color:var(--plum);font-weight:900;font-size:1.05rem}
+.meter{height:9px;background:#f0ebf1;border-radius:100px;overflow:hidden;margin:17px 0 22px}
+.meter>div{height:100%;background:linear-gradient(90deg,#028681,#f0b65c);border-radius:100px;transition:width .25s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 20px;border-radius:999px;border:2px solid transparent;background:var(--teal);color:#fff;font-weight:800;line-height:1.25;transition:transform .15s,box-shadow .15s;text-decoration:none}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 12px #0a635620}
+.btn.alt{border-color:#addbd2;color:var(--teal-dark);background:#fff}
+.btn.gold{background:var(--honey);color:#6c430e;border-color:#f2cd79}
+.btn.danger{color:var(--coral);border-color:#efc2c9;background:#fff}
+.btn.tiny{min-height:40px;padding:7px 14px;font-size:.89rem}
+.lead{font-size:clamp(1.03rem,2.5vw,1.2rem);max-width:900px}
+.actions{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin:20px 0 12px}
+.hint{font-size:.88rem;color:var(--muted);margin:10px 0 0}
+.intro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.intro-grid>div{padding:16px;border-radius:17px;background:#faf8fb;border:1px solid #ece6ee}
+.intro-grid .num{color:var(--teal);font-size:1.25rem;font-weight:900;margin-right:4px}
+.intro-grid b{display:block;font-size:1rem}
+.intro-grid p{margin:5px 0 0;font-size:.91rem;color:var(--muted)}
+.hero{background:#fbf9fd;border:1px solid #ede2f0;border-radius:22px;text-align:center;padding:16px 17px 19px}
+.hero .eyebrow{font-weight:750;color:#75657d;font-size:.9rem;margin-bottom:11px}
+.original{font-size:clamp(1.35rem,4vw,2.12rem);font-weight:900;display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;line-height:1.5}
+.part-chip,.noun-chip,.ne-chip{border-radius:13px;padding:3px 12px;display:inline-block}
+.ne-chip{background:#f1e4f5;color:#603c6d}
+.part-chip{background:#d9f4eb;color:#056e69}.noun-chip{background:#fff0bf;color:#80510b}
+.section-label{font-size:1.14rem;font-weight:900;margin:23px 0 10px;color:var(--plum)}
+.section-label small{font-size:.85rem;color:#837c8a;font-weight:700;margin-left:5px}
+.status{padding:13px 17px;border-radius:15px;font-weight:800;margin:17px 0}
+.status.good{background:#e4f8ef;color:#006951}.status.bad{background:#fff0f2;color:#a5324b}.status.warn{background:#fff5dc;color:#795314}
+.sorter-stage{background:linear-gradient(120deg,#f8fffc,#fff9ee);border:2px solid #e6e2d2;border-radius:22px;padding:18px}
+.sorter-current{display:grid;grid-template-columns:1.2fr .95fr;gap:16px;align-items:start}
+.sorter-cardbox{background:#fff;border:1px solid #ebe4e9;border-radius:18px;padding:16px}
+.sorter-card-title{font-size:.86rem;letter-spacing:.06em;text-transform:uppercase;color:#7f7583;font-weight:800}
+.sorter-card{margin-top:8px;min-height:104px;display:flex;align-items:center;justify-content:center;padding:18px;border-radius:18px;background:#fbfafc;border:2px dashed #e4dde3}
+.sorter-card .phrase{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:clamp(1.2rem,3vw,1.8rem);font-weight:900}
+.sorter-help{padding:14px;border-radius:16px;background:#faf7fb;border:1px solid #ece3ef}
+.sorter-help h3{margin:0 0 8px;color:var(--plum);font-size:1.05rem}
+.sorter-help p{margin:7px 0;color:var(--muted);font-size:.95rem}
+.dropzones{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dropzone{border-radius:22px;padding:16px;border:2px solid #ddd;min-height:240px;display:flex;flex-direction:column}
+.dropzone.left{background:#f6fcfb;border-color:#b9e2d9}
+.dropzone.right{background:#fff9ef;border-color:#efd189}
+.dropzone h3{margin:0;font-size:1.08rem;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.dropzone small{display:block;margin-top:3px;color:var(--muted);font-weight:600}
+.drop-btns{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.sort-choice{flex:1 1 220px;min-height:54px;border-radius:18px;border:2px solid transparent;font-weight:900;padding:10px 14px;text-align:left}
+.left .sort-choice{background:#dff6ef;color:#005f59;border-color:#a4dbcf}
+.right .sort-choice{background:#fff0c5;color:#7c4d08;border-color:#e7c26c}
+.pile{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.pile-card{border-radius:14px;padding:10px 12px;font-weight:820;background:#fff;border:1px solid #e6e1e5;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pile-card .solved{font-size:.98rem}
+.pile-card.good{box-shadow:inset 0 0 0 2px #d6efe6}.pile-card.bad{box-shadow:inset 0 0 0 2px #f3d7dd}
+.pile-tag{font-size:.75rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:#f3eff5;color:#6d5679}
+.errors-board{margin-top:18px;display:grid;gap:12px}.error-card{background:#fff;border:2px solid #eac7cc;border-radius:19px;padding:16px}.error-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;color:var(--plum);font-weight:900}.error-before{font-size:1.04rem;font-weight:850;background:#faf8fb;border-radius:13px;padding:10px 13px;margin:8px 0}.error-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.error-cell{border-radius:13px;padding:12px 14px;background:#fff0f2;border:1px solid #efcbd2}.error-cell.correct{background:#eaf8f1;border-color:#b6e1d0}.error-cell .minor{font-size:.8rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.02em}.error-cell b{display:block;margin-top:3px;font-size:1.08rem}.errors-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.summary-box{background:linear-gradient(112deg,#f2fbf7,#fff9eb);border:1px solid #d9ebdf;border-radius:18px;padding:18px;margin-top:18px}
+.summary-box h2{margin:0 0 8px;color:var(--plum)}
+.summary-box p{margin:5px 0;font-size:1.04rem}
+.arrow-go{font-size:1.2rem;padding-inline:18px}
+.lab{background:linear-gradient(125deg,#f8fffc,#fffaf0);border:2px solid #e4e3d8;border-radius:21px;padding:18px}
+.lab-header{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:13px}.lab-header b{font-size:1rem}.lab-header span{font-size:.84rem;color:var(--muted)}
+.selectors{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:end}
+.slot{border-radius:16px;padding:12px;min-width:0}.slot.part-slot{background:var(--mint);border:1px solid #afdfd5}.slot.noun-slot{background:var(--honey);border:1px solid #f1d491}
+.slot label{display:block;font-size:.89rem;font-weight:850;margin:0 0 9px}.slot.part-slot label{color:#005f5c}.slot.noun-slot label{color:#7e4d04}
+.slot select{appearance:auto;width:100%;min-width:0;min-height:53px;padding:9px 12px;background:#fff;border:2px solid #dcd8d8;border-radius:11px;color:#24212b;font-size:clamp(1rem,2.1vw,1.16rem);font-weight:850;cursor:pointer}
+.slot select:disabled{background:#faf9f6;color:#999;cursor:default}.slot select:not(:disabled):focus{border-color:#d69a40}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:7px;margin-top:15px}
+.compare .comparison{min-height:72px;padding:11px 10px;border-radius:14px;background:#fff;border:1px solid #e5e0e4;text-align:center}
+.compare .label-sm{font-size:.75rem;letter-spacing:.04em;font-weight:800;color:#817783;text-transform:uppercase}
+.compare .phrase-compare{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;font-weight:800;font-size:clamp(.95rem,2.2vw,1.22rem)}
+.compare .arrow{font-size:2rem;font-weight:900;color:#aa80ae}.part-txt{color:var(--teal-dark)}.noun-txt{color:#8e590f}.placeholder{color:#b2a5ad}
+.mini-rule{display:flex;gap:9px;align-items:center;margin-top:14px;font-size:.88rem;color:#655c66}.mini-rule .dot{height:12px;width:12px;border-radius:50%;background:var(--teal);box-shadow:18px 0 0 #e0a749;margin-right:21px;flex-shrink:0}
+.conclusion{margin-top:22px}.subq{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap;font-weight:850;margin:15px 0 8px}.subq .tag{background:#f0edf3;border-radius:100px;color:#584464;font-size:.73rem;padding:3px 9px;font-weight:850;letter-spacing:.02em}
+.choice-row{display:flex;flex-wrap:wrap;gap:8px}.choice{position:relative}.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice label{display:inline-block;padding:10px 17px;min-height:44px;border:2px solid #ddd5df;border-radius:999px;background:#fff;font-weight:800;cursor:pointer;transition:background .12s,border-color .12s}
+.choice input:checked+label{background:#e4f6f0;color:#00645d;border-color:#06a194;box-shadow:0 0 0 2px #e4f6f0}.choice input:disabled+label{opacity:.45;cursor:not-allowed}
+.choice.emph input:checked+label{background:#fff2d5;color:#794e16;border-color:#d6a54c;box-shadow:0 0 0 2px #fff2d5}
+.choice.plum input:checked+label{background:#f2ebf4;color:#573d63;border-color:#a88ab5;box-shadow:0 0 0 2px #f2ebf4}
+.side-soft{border:1px solid #eee7f0;background:#fbfafc;border-radius:15px;padding:14px}.side-soft .subq{margin:0 0 9px}
+.btnbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px dashed #ddd7dc}
+.feedback{margin-top:21px;border-top:2px solid #eee9ee;padding-top:22px}.feedback h2{color:var(--plum);font-size:1.34rem;margin:0 0 14px}
+.feedback-summary{background:linear-gradient(110deg,#f0fbf6,#fffaeb);border:1px solid #cce9da;padding:16px;border-radius:17px}
+.feedback-summary h3{margin:0 0 8px;font-size:1.3rem}.feedback-summary p{margin:5px 0;font-size:1.02rem}
+.verdict{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.verdict .pill{border-radius:12px;background:#fff;border:1px solid #dfdfda;padding:8px 12px;font-weight:800}
+.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:15px 0}.check{padding:11px 13px;border-radius:13px;font-size:.94rem;border:1px solid #e4dfe4;background:#f9f8f9}.check.correct{background:#ecf9f1;border-color:#a8dcc7}.check.incorrect{background:#fff0f2;border-color:#efbfc9}.check b{display:block}
+.review-title{font-size:.99rem;font-weight:900;margin:16px 0 8px}.case-row{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:8px 10px;border-bottom:1px solid #e8e4e7}.case-row:last-child{border-bottom:0}
+.case-mark{width:29px;height:29px;background:#f1eaf2;color:#5a4564;border-radius:10px;font-weight:900;text-align:center;line-height:29px;flex:0 0 auto;font-size:.84rem}
+.case-word{font-size:clamp(.94rem,2.2vw,1.08rem);font-weight:850}.case-word .p{color:var(--teal-dark)}.case-word .n{color:#8f5b11}.case-row .preposition{color:#5e5362}.rowset{border:1px solid #e8e2e8;border-radius:13px;overflow:hidden}.keyline{font-size:.91rem;color:var(--muted);margin:10px 0}
+.result-n{font-size:clamp(3rem,7vw,4.5rem);font-weight:950;color:var(--teal);line-height:1.2}.result-cards{display:flex;flex-wrap:wrap;gap:11px}.result-cards span{padding:10px 14px;background:#f6f4f6;border:1px solid #e8e2e8;border-radius:13px;font-weight:780}
+.reset-hint{margin-top:18px;font-size:.86rem;color:var(--muted)}footer{text-align:center;font-size:.79rem;color:#77707e;margin:0 auto 20px;padding:0 16px;max-width:850px}
+@media(max-width:860px){.sorter-current{grid-template-columns:1fr}.dropzones,.checklist,.error-grid{grid-template-columns:1fr}}
+@media(max-width:700px){main{padding:0 11px;margin:14px auto 36px}.page{padding:16px}.intro-grid{grid-template-columns:1fr}.selectors{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}.slot{padding:8px}.slot select{font-size:.88rem;padding:8px 5px;min-height:48px}.compare{grid-template-columns:1fr}.compare .arrow{transform:rotate(90deg)}.btnbar{flex-direction:column;align-items:stretch}.drop-btns{flex-direction:column}.sort-choice{flex:0 0 auto;width:100%;min-height:56px}}
+
+/* Версия 7 · выразительные рамки, контрастные цвета, два списка рядом */
+:root{
+  --plum:#412349;--plum-deep:#291330;--teal:#087d73;--teal-dark:#005e55;
+  --mint:#d7f6ec;--honey:#ffedb3;--amber:#b46c0a;--coral:#b83f59;
+  --bg:#f4f5ef;--shadow:0 12px 0 #3822420b;
+}
+body{background:radial-gradient(circle at 12% 0%,#e6faf4 0,transparent 26%),radial-gradient(circle at 88% 3%,#fff0cd 0,transparent 26%),#f4f5ef}
+header{border-bottom:5px solid #efba55;background:radial-gradient(circle at 92% -25%,#946488 0,transparent 32%),linear-gradient(115deg,#2c1536,#52305b)}
+.page{border:2px solid #e7dce8;box-shadow:0 12px 0 #3822420b,0 18px 35px #3822420a}
+.hero{background:linear-gradient(120deg,#eee4f5,#fff7de);border:2px solid #cdb6d5;box-shadow:inset 0 0 0 3px #ffffffad}
+.hero .eyebrow{color:#694674;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.part-chip{background:#8be0cf;color:#064b46;border:2px solid #36b8a6}
+.noun-chip{background:#ffdc86;color:#6d4406;border:2px solid #f3bd55}
+.section-label{font-size:clamp(1.15rem,2.2vw,1.47rem);color:#3b1d47;line-height:1.24;padding-left:14px;border-left:7px solid #17a98d;margin:26px 0 15px}
+.lab{background:linear-gradient(125deg,#f1fff8 0%,#fff2cb 100%);border:3px solid #d3b7d7;box-shadow:7px 7px 0 #d7efe7;padding:20px}
+.lab-header{padding:7px 12px;margin-bottom:15px;border-radius:13px;background:#56305c;color:#fff}
+.lab-header b{font-size:1.09rem}
+.lab-header span{color:#ffe4ad;font-weight:700}
+.selectors{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.slot{padding:15px;border-radius:18px;display:flex;flex-direction:column;min-width:0}
+.slot.part-slot{border:3px solid #26b49f;background:linear-gradient(135deg,#d6f7e9,#f0fffa);box-shadow:4px 4px 0 #a2e6d7}
+.slot.noun-slot{border:3px solid #e7ac31;background:linear-gradient(135deg,#ffebae,#fff8e1);box-shadow:4px 4px 0 #f2d28c}
+.slot label{font-size:clamp(.91rem,1.8vw,1.04rem);line-height:1.28;min-height:2.6em;font-weight:900;display:flex;align-items:center;margin:0 0 10px}
+.slot select{border:2px solid #b2a6b0;min-height:57px;box-shadow:0 3px 0 #27183312;background-color:white;color:#2a2031;font-weight:900}
+.slot select:disabled{color:#827683;background:#f5f2f2}
+.slot.part-slot select:not(:disabled):focus{border-color:#008b7b}
+.slot.noun-slot select:not(:disabled):focus{border-color:#c88717}
+.compare{gap:12px;margin-top:20px}
+.compare .comparison{border:2px solid #e0d3df;background:#fff;border-radius:17px;min-height:96px;padding:12px}
+.compare .comparison:first-child{border-left:7px solid #17a98d}
+.compare .comparison:last-child{border-left:7px solid #dfa431}
+.compare .label-sm{color:#64466e;font-size:.82rem}
+.compare .arrow{color:#a04fa0}
+.mini-rule{color:#46384c;font-size:.97rem;font-weight:650}
+.conclusion .side-soft{background:#f7f2fb;border:2px solid #cbb4d3;box-shadow:4px 4px 0 #ebdcf0}
+.conclusion .side-soft:nth-child(2){background:#fff8e5;border-color:#e6ba61;box-shadow:4px 4px 0 #f6e3ad}
+.conclusion .side-soft:nth-child(3){background:#e9faf4;border-color:#79c7b7;box-shadow:4px 4px 0 #c9f0e5}
+.conclusion .subq{font-size:1.03rem;color:#3c2645}
+.choice label{border-width:2px}
+.feedback-summary{background:linear-gradient(120deg,#dbf8ef,#fff2cb);border:2px solid #95cfc0}
+.dropzone.left{background:#eafbF5;border-color:#3daf9d;box-shadow:4px 4px 0 #cbeee4}
+.dropzone.right{background:#fff4d1;border-color:#edbc52;box-shadow:4px 4px 0 #fae5af}
+.sorter-card{background:linear-gradient(110deg,#f4eafa,#fff3df);border:2px dashed #b88ac3}
+.sorter-stage{border-color:#cbadd4;background:linear-gradient(115deg,#f5fffb,#fff4d9)}
+.sorter-help{background:#f4eaf8;border-color:#d4b8dd}
+@media(max-width:700px){
+  .selectors{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
+  .lab{padding:12px;box-shadow:3px 3px 0 #d7efe7}
+  .slot{padding:9px}
+  .slot label{font-size:.82rem;min-height:4.35em;align-items:start}
+  .slot select{font-size:.86rem;padding:8px 4px;min-height:53px}
+  .compare{grid-template-columns:1fr auto 1fr;gap:4px}
+  .compare .arrow{transform:none;font-size:1.4rem}
+  .compare .comparison{min-height:105px;padding:10px 5px}
+  .compare .phrase-compare{font-size:.95rem}
+  .lab-header span{font-size:.74rem}
+}
+@media(max-width:390px){
+  .slot label{font-size:.76rem;min-height:5em}
+  .slot select{font-size:.77rem}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="sup">ОРФОГРАФИЧЕСКАЯ ЛАБОРАТОРИЯ</div>
+  <h1>Кто здесь главный?</h1>
+  <p>Сначала быстрый сортер, затем — при необходимости — подробная проработка 20 карточек.</p>
+</header>
+<main id="app"></main>
+<footer>Тренажёр показывает, как по поведению существительного отличить зависимое слово от определяемого и выбрать написание НЕ с причастием.</footer>
+<script>
+(()=>{
+const D=[
+{id:1,mode:'u',p:['сдавший','сдавшего','сдавшему','сдавшим','сдавшем'],n:['экзамен','экзамена','экзамену','экзаменом','экзамене'],fixed:0,q:'сдавший (что?) экзамен'},
+{id:2,mode:'s',p:['полученные','полученных','полученным','полученными','полученных'],n:['награды','наград','наградам','наградами','наградах'],q:'награды (какие?) полученные'},
+{id:3,mode:'u',p:['досмотревший','досмотревшего','досмотревшему','досмотревшим','досмотревшем'],n:['фильм','фильма','фильму','фильмом','фильме'],fixed:0,q:'досмотревший (что?) фильм'},
+{id:4,mode:'u',p:['выполнившие','выполнивших','выполнившим','выполнившими','выполнивших'],n:['задания','заданий','заданиям','заданиями','заданиях'],fixed:0,q:'выполнившие (что?) задания'},
+{id:5,mode:'s',p:['сдавший','сдавшего','сдавшему','сдавшим','сдавшем'],n:['студент','студента','студенту','студентом','студенте'],q:'студент (какой?) сдавший'},
+{id:6,mode:'s',p:['выбранный','выбранного','выбранному','выбранным','выбранном'],n:['подарок','подарка','подарку','подарком','подарке'],q:'подарок (какой?) выбранный'},
+{id:7,mode:'u',p:['получившие','получивших','получившим','получившими','получивших'],n:['награды','наград','наградам','наградами','наградах'],fixed:0,q:'получившие (что?) награды'},
+{id:8,mode:'s',p:['работающий','работающего','работающему','работающим','работающем'],n:['механизм','механизма','механизму','механизмом','механизме'],q:'механизм (какой?) работающий'},
+{id:9,mode:'u',p:['выбравший','выбравшего','выбравшему','выбравшим','выбравшем'],n:['подарок','подарка','подарку','подарком','подарке'],fixed:0,q:'выбравший (что?) подарок'},
+{id:10,mode:'s',p:['читаемый','читаемого','читаемому','читаемым','читаемом'],n:['журнал','журнала','журналу','журналом','журнале'],q:'журнал (какой?) читаемый'},
+{id:11,mode:'u',p:['выполняющий','выполняющего','выполняющему','выполняющим','выполняющем'],n:['план','плана','плану','планом','плане'],fixed:0,q:'выполняющий (что?) план'},
+{id:12,mode:'s',p:['выполненные','выполненных','выполненным','выполненными','выполненных'],n:['задания','заданий','заданиям','заданиями','заданиях'],q:'задания (какие?) выполненные'},
+{id:13,mode:'s',p:['решённый','решённого','решённому','решённым','решённом'],n:['пример','примера','примеру','примером','примере'],q:'пример (какой?) решённый'},
+{id:14,mode:'u',p:['заполнившие','заполнивших','заполнившим','заполнившими','заполнивших'],n:['анкеты','анкет','анкетам','анкетами','анкетах'],fixed:0,q:'заполнившие (что?) анкеты'},
+{id:15,mode:'s',p:['купленный','купленного','купленному','купленным','купленном'],n:['подарок','подарка','подарку','подарком','подарке'],q:'подарок (какой?) купленный'},
+{id:16,mode:'u',p:['подписавший','подписавшего','подписавшему','подписавшим','подписавшем'],n:['договор','договора','договору','договором','договоре'],fixed:0,q:'подписавший (что?) договор'},
+{id:17,mode:'s',p:['отправленные','отправленных','отправленным','отправленными','отправленных'],n:['письма','писем','письмам','письмами','письмах'],q:'письма (какие?) отправленные'},
+{id:18,mode:'u',p:['отправившие','отправивших','отправившим','отправившими','отправивших'],n:['письма','писем','письмам','письмами','письмах'],fixed:0,q:'отправившие (что?) письма'},
+{id:19,mode:'u',p:['решивший','решившего','решившему','решившим','решившем'],n:['пример','примера','примеру','примером','примере'],fixed:0,q:'решивший (что?) пример'},
+{id:20,mode:'s',p:['пришедшие','пришедших','пришедшим','пришедшими','пришедших'],n:['гости','гостей','гостям','гостями','гостях'],q:'гости (какие?) пришедшие'}
+];
+const CASES=['И.','Р.','Д.','Т.','П.'];
+const KEY='participle-head-noun-lab-v7';
+const app=document.querySelector('#app');
+const load=()=>{try{const o=JSON.parse(localStorage.getItem(KEY));if(o)return o}catch(e){}return {sorter:{done:false,index:0,left:[],right:[],errors:[]},practice:{done:{},errors:[]}}};
+let state=load();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+const noun=(d,i)=>d.n[d.mode==='u'?d.fixed:i];
+const part=(d,i)=>`${i===4?'о ':''}(не)${d.p[i]}`;
+const answerPart=(d,i)=>`${i===4?'о ':''}${d.mode==='u'?'не ': 'не'}${d.p[i]}`;
+const formatted=(d,i,solved=false)=>`${solved?answerPart(d,i):part(d,i)} ${noun(d,i)}`;
+const currentSorter=()=>D[state.sorter.index]||null;
+let practiceSeq=D.map(x=>x.id), practicePos=0, review=false, a={};
+const currentPractice=()=>D.find(d=>d.id===practiceSeq[practicePos]);
+function radio(name,options,disabled=false,cls=''){return `<div class="choice-row" role="group">${options.map(([key,label])=>`<div class="choice ${cls}"><input type="radio" name="${name}" id="${name}-${key}" value="${key}" ${a[name]===key?'checked':''} ${disabled?'disabled':''}><label for="${name}-${key}">${label}</label></div>`).join('')}</div>`}
+function home(){
+  const errCount=state.sorter.errors.length;
+  const practiceDone=Object.keys(state.practice.done).length;
+  app.innerHTML=`<section class="page">
+    <div class="top"><strong class="count">Стартовый экран</strong>${state.sorter.done?'<button class="btn danger tiny" id="resetAll">Сбросить всё</button>':''}</div>
+    <p class="lead">Сначала ученик быстро распределяет словосочетания: <b>нет зависимого слова — пишем слитно</b> / <b>есть зависимое слово — пишем раздельно</b>. Если ошибки были, переходим к подробной проработке.</p>
+    <div class="intro-grid">
+      <div><span class="num">1</span><b>Быстрый сортер</b><p>20 карточек появляются одна за другой. Нужно отправить их влево или вправо.</p></div>
+      <div><span class="num">2</span><b>Наблюдение за формами</b><p>Во второй части ученик меняет форму причастия и смотрит, меняется существительное или нет.</p></div>
+      <div><span class="num">3</span><b>Вывод без занудства</b><p>Сначала связь, потом вывод о слове, и только потом — написание НЕ.</p></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="startSorter">${state.sorter.done?'Открыть сортер снова':'Начать сортер'}</button>
+      ${state.sorter.done && errCount>0 ? '<button class="btn gold" id="seeErrors">Посмотреть ошибки →</button>':''}
+      ${practiceDone>0 ? '<button class="btn alt" id="continuePractice">Продолжить проработку</button>':''}
+    </div>
+    ${state.sorter.done ? `<div class="summary-box"><h2>Что уже есть</h2><p><b>Сортер пройден.</b> Ошибок: ${errCount}.</p>${errCount===0?'<p><b>Были ошибки?</b> Отлично, ошибок не было.</p>':'<p><b>Были ошибки.</b> Переходим к проработке.</p>'}${practiceDone?`<p>Карточек проработано: <b>${practiceDone} из 20</b>.</p>`:''}</div>`:''}
+    <p class="hint">Подсказка: если ученик уже уверенно видит зависимое слово, можно ограничиться сортером.</p>
+  </section>`;
+  if(state.sorter.done) document.querySelector('#resetAll').onclick=resetAll;
+  document.querySelector('#startSorter').onclick=()=>{if(state.sorter.done){state.sorter={done:false,index:0,left:[],right:[],errors:[]};save();} sorter();};
+  const se=document.querySelector('#seeErrors'); if(se) se.onclick=showSorterErrors;
+  const cp=document.querySelector('#continuePractice'); if(cp) cp.onclick=()=>startPractice(false,false);
+}
+function resetAll(){if(confirm('Сбросить сортер и все 20 карточек?')){state={sorter:{done:false,index:0,left:[],right:[],errors:[]},practice:{done:{},errors:[]}};save();home();}}
+function sorter(){
+  const d=currentSorter();
+  const progress=(state.sorter.index/20)*100;
+  const doneAll=state.sorter.index>=D.length;
+  if(doneAll){sorterEnd();return;}
+  app.innerHTML=`<section class="page">
+    <div class="top"><strong class="count">Сортер · карточка ${state.sorter.index+1} из 20</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
+    <div class="meter"><div style="width:${progress}%"></div></div>
+    <div class="sorter-stage">
+      <div class="sorter-current">
+        <div class="sorter-cardbox">
+          <div class="sorter-card-title">Карточка для распределения</div>
+          <div class="sorter-card"><div class="phrase"><span class="part-chip">(не)${d.p[0]}</span><span class="noun-chip">${noun(d,0)}</span></div></div>
+        </div>
+        <div class="sorter-help">
+          <h3>Что нужно сделать?</h3>
+          <p><b>Слева</b> — словосочетания, где <b>нет зависимого слова</b>, поэтому НЕ пишется <b>слитно</b>.</p>
+          <p><b>Справа</b> — словосочетания, где <b>есть зависимое слово</b>, поэтому НЕ пишется <b>раздельно</b>.</p>
+          <p>После выбора скобки раскроются. Ошибочные решения сохраним для просмотра в конце сортера.</p>
+        </div>
+      </div>
+      <div id="sortStatus"></div>
+      <div class="dropzones">
+        <div class="dropzone left">
+          <h3><span>Нет зависимого слова</span><span class="pile-tag">Слитно</span></h3>
+          <small>Существительное здесь — определяемое слово.</small>
+          <div class="drop-btns"><button class="sort-choice" id="toLeft">Отправить сюда</button></div>
+          <div class="pile" id="leftPile">${state.sorter.left.map(cardHTML).join('')}</div>
+        </div>
+        <div class="dropzone right">
+          <h3><span>Есть зависимое слово</span><span class="pile-tag">Раздельно</span></h3>
+          <small>Существительное зависит от причастия (В. п.).</small>
+          <div class="drop-btns"><button class="sort-choice" id="toRight">Отправить сюда</button></div>
+          <div class="pile" id="rightPile">${state.sorter.right.map(cardHTML).join('')}</div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+  document.querySelector('#homeBtn').onclick=home;
+  document.querySelector('#toLeft').onclick=()=>sortChoose('left');
+  document.querySelector('#toRight').onclick=()=>sortChoose('right');
+}
+function cardHTML(item){
+  return `<div class="pile-card ${item.ok?'good':'bad'}"><span class="solved">${item.text}</span>${item.ok?'':'<span class="pile-tag">была ошибка</span>'}</div>`;
+}
+function sortChoose(side){
+  const d=currentSorter();
+  const correctSide=d.mode==='s'?'left':'right';
+  const ok=side===correctSide;
+  const solvedText=formatted(d,0,true);
+  const pileItem={id:d.id,text:solvedText,ok,choice:side};
+  state.sorter[correctSide].push(pileItem);
+  if(!ok && !state.sorter.errors.includes(d.id)) state.sorter.errors.push(d.id);
+  state.sorter.index++;
+  save();
+  sorter();
+  const msg=document.querySelector('#sortStatus');
+  if(msg){
+    msg.innerHTML=`<div class="status ${ok?'good':'bad'}">${ok?'Верно!':'Небольшая ошибка.'} ${correctSide==='left'?'Здесь нет зависимого слова, поэтому пишем <b>слитно</b>.':'Здесь есть зависимое слово, поэтому пишем <b>раздельно</b>.'}</div>`;
+  }
+}
+function sorterEnd(){
+  state.sorter.done=true; save();
+  const errors=state.sorter.errors.length;
+  app.innerHTML=`<section class="page">
+    <div class="top"><strong class="count">Сортер завершён</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
+    <div class="result-n">20<span style="font-size:1.1rem;color:var(--muted);font-weight:700"> карточек</span></div>
+    <div class="result-cards"><span>Ошибок: ${errors}</span><span>Слитно: ${state.sorter.left.length}</span><span>Раздельно: ${state.sorter.right.length}</span></div>
+    <div class="summary-box">
+      ${errors===0
+        ? '<h2>Были ошибки?</h2><p><b>Отлично, ошибок не было.</b></p>'
+        : `<h2>Были ошибки?</h2><p><b>Да, ${errors}.</b> Сначала посмотрим, в каких словосочетаниях возникли затруднения, а затем перейдём к проработке.</p>`}
+    </div>
+    <div class="actions">
+      ${errors===0?'':'<button class="btn gold" id="seeErrors">Посмотреть ошибки →</button>'}
+      <button class="btn alt" id="againSorter">Пройти сортер ещё раз</button>
+    </div>
+  </section>`;
+  document.querySelector('#homeBtn').onclick=home;
+  document.querySelector('#againSorter').onclick=()=>{state.sorter={done:false,index:0,left:[],right:[],errors:[]};save();sorter();};
+  const se=document.querySelector('#seeErrors'); if(se) se.onclick=showSorterErrors;
+}
+function showSorterErrors(){
+  const mistakes=[...state.sorter.left,...state.sorter.right].filter(x=>!x.ok).sort((a,b)=>a.id-b.id);
+  if(!mistakes.length){sorterEnd();return;}
+  app.innerHTML=`<section class="page">
+    <div class="top"><strong class="count">Разбор ошибок сортера · ${mistakes.length} из 20</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
+    <h2 style="color:var(--plum);margin:20px 0 10px">Посмотри, что перепутано</h2>
+    <p class="lead" style="margin:0">Здесь только те карточки, которые попали не в свою колонку. Сравни свой выбор с правильным написанием.</p>
+    <div class="errors-board">${mistakes.map(item=>{
+      const d=D.find(x=>x.id===item.id);
+      const correctSide=d.mode==='s'?'left':'right';
+      const wrongName=item.choice==='left'?'Нет зависимого слова · слитно':'Есть зависимое слово · раздельно';
+      const rightName=correctSide==='left'?'Нет зависимого слова · слитно':'Есть зависимое слово · раздельно';
+      return `<div class="error-card"><div class="error-top"><span>Карточка ${item.id}</span><span class="pile-tag">Была ошибка</span></div>
+        <div class="error-before"><span class="part-txt">(не)${d.p[0]}</span> <span class="noun-txt">${noun(d,0)}</span></div>
+        <div class="error-grid">
+          <div class="error-cell"><span class="minor">Твой выбор</span><b>${wrongName}</b></div>
+          <div class="error-cell correct"><span class="minor">Правильно</span><b>${rightName}</b><div style="margin-top:8px;font-size:1.1rem;font-weight:900;color:var(--plum)">${formatted(d,0,true)}</div></div>
+        </div>
+      </div>`;
+    }).join('')}</div>
+    <div class="summary-box"><p><b>Теперь понятно, что стоит потренировать.</b> В следующих 20 карточках сначала меняем формы, затем определяем связь, выясняем, является ли существительное зависимым или определяемым словом, и выбираем написание НЕ.</p></div>
+    <div class="errors-actions"><button class="btn gold arrow-go" id="goPractice">Перейти к проработке →</button><button class="btn alt" id="back">Назад к итогу</button></div>
+  </section>`;
+  document.querySelector('#goPractice').onclick=()=>startPractice(false,true);
+  document.querySelector('#back').onclick=sorterEnd;
+  document.querySelector('#homeBtn').onclick=home;
+}
+function startPractice(fromErrorsOnly=false, fresh=true){
+  review=fromErrorsOnly;
+  if(review && state.sorter.errors.length){practiceSeq=[...state.sorter.errors];}
+  else practiceSeq=D.map(x=>x.id);
+  if(fresh){practicePos=0;}else{const doneIds=Object.keys(state.practice.done).map(Number); const idx=practiceSeq.findIndex(id=>!doneIds.includes(id)); practicePos=idx===-1?0:idx;}
+  a={p:'',n:'',type:'',role:'',write:''};
+  drawPractice();
+}
+function orderedOptions(d,idx){const vals=[...new Set(d.n)];const rot=(d.id*3+idx)%vals.length;return [...vals.slice(rot),...vals.slice(0,rot)];}
+function drawPractice(){
+  if(practicePos>=practiceSeq.length){practiceEnd();return}
+  const d=currentPractice();
+  const i=a.p===''?null:Number(a.p);
+  const completed=Object.keys(state.practice.done).length;
+  app.innerHTML=`<section class="page">
+    <div class="top"><strong class="count">${review?'Проработка после сортера · ':'Карточка '} ${practicePos+1} из ${practiceSeq.length}</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
+    <div class="meter"><div style="width:${(review?practicePos/practiceSeq.length:completed/20)*100}%"></div></div>
+    <div class="hero"><div class="eyebrow">Исходное словосочетание</div><div class="original"><span class="part-chip">(не)${d.p[0]}</span><span class="noun-chip">${noun(d,0)}</span></div></div>
+    <h2 class="section-label">Согласуется причастие с существительным или управляет им?</h2>
+    <div class="lab"><div class="lab-header"><b>Падежная лаборатория</b><span>Сравни, как изменяются два слова</span></div>
+      <div class="selectors">
+        <div class="slot part-slot"><label for="p">Выбери для причастия другой падеж</label><select id="p"><option value="">Выбери форму…</option>${[1,2,3,4].map(j=>`<option value="${j}" ${i===j?'selected':''}>${part(d,j)}</option>`).join('')}</select></div>
+        <div class="slot noun-slot"><label for="n">Какая будет форма существительного?</label><select id="n" ${i===null?'disabled':''}><option value="">Выбери форму…</option>${i===null?'':orderedOptions(d,i).map(val=>`<option value="${val}" ${a.n===val?'selected':''}>${val}</option>`).join('')}</select></div>
+      </div>
+      <div class="compare"><div class="comparison"><div class="label-sm">Было</div><div class="phrase-compare"><span class="part-txt">(не)${d.p[0]}</span> <span class="noun-txt">${noun(d,0)}</span></div></div><span class="arrow" aria-hidden="true">→</span><div class="comparison"><div class="label-sm">Стало</div><div class="phrase-compare"><span class="part-txt">${i===null?'<span class="placeholder">…</span>':part(d,i)}</span> <span class="noun-txt">${a.n||'<span class="placeholder">?</span>'}</span></div></div></div>
+      <div class="mini-rule"><span class="dot" aria-hidden="true"></span>Смотри на существительное: меняется оно вместе с причастием или нет.</div>
+    </div>
+    <h2 class="section-label">2. Сделай вывод по цепочке</h2>
+    <div class="conclusion">
+      <div class="side-soft"><div class="subq">Какая здесь связь? <span class="tag">ШАГ 1</span></div>${radio('type', [['u','Управление'],['s','Согласование']], !(a.p && a.n),'')}</div>
+      <div class="side-soft" style="margin-top:14px"><div class="subq">Значит, существительное здесь… <span class="tag">ШАГ 2</span></div>${radio('role', [['dependent','Зависимое от причастия слово'],['main','Определяемое слово']], !a.type, 'emph')}</div>
+      <div class="side-soft" style="margin-top:14px"><div class="subq">Поэтому НЕ пишется… <span class="tag">ШАГ 3</span></div>${radio('write', [['apart','Раздельно'],['together','Слитно']], !a.role, 'plum')}</div>
+    </div>
+    <div id="alert" aria-live="polite"></div>
+    <div class="btnbar"><button class="btn" id="check">Проверить цепочку</button><button class="btn alt" id="restartPractice">Заново 20 карточек</button></div>
+    <div id="feedback" aria-live="polite"></div>
+  </section>`;
+  document.querySelector('#homeBtn').onclick=home;
+  document.querySelector('#p').onchange=e=>{a={p:e.target.value,n:'',type:'',role:'',write:''};drawPractice();};
+  document.querySelector('#n').onchange=e=>{a.n=e.target.value;a.type='';a.role='';a.write='';drawPractice();};
+  for(const input of document.querySelectorAll('input[type=radio]')) input.onchange=e=>{a[e.target.name]=e.target.value; if(e.target.name==='type'){a.role='';a.write='';} if(e.target.name==='role'){a.write='';} drawPractice();};
+  document.querySelector('#check').onclick=checkPractice;
+  document.querySelector('#restartPractice').onclick=()=>{if(confirm('Пройти все 20 карточек заново?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a={p:'',n:'',type:'',role:'',write:''};drawPractice();}};
+}
+function checkPractice(){
+  const d=currentPractice();
+  const box=document.querySelector('#alert');
+  if(a.p===''||!a.n||!a.type||!a.role||!a.write){box.innerHTML='<div class="status warn">Сначала выбери обе формы, затем связь, потом вывод о существительном и только потом написание НЕ.</div>'; return;}
+  const i=Number(a.p);
+  const right={n:noun(d,i),type:d.mode,role:d.mode==='u'?'dependent':'main',write:d.mode==='u'?'apart':'together'};
+  const checks=[
+    {k:'n',ok:a.n===right.n,label:'Форма существительного',right:right.n},
+    {k:'type',ok:a.type===right.type,label:'Тип связи',right:d.mode==='u'?'управление':'согласование'},
+    {k:'role',ok:a.role===right.role,label:'Вывод о существительном',right:d.mode==='u'?'зависимое от причастия слово':'определяемое слово'},
+    {k:'write',ok:a.write===right.write,label:'Написание НЕ',right:d.mode==='u'?'раздельно':'слитно'}
+  ];
+  const success=checks.every(x=>x.ok);
+  if(!state.practice.done[d.id]) state.practice.done[d.id]={success}; else state.practice.done[d.id].success=success;
+  if(!success && !state.practice.errors.includes(d.id)) state.practice.errors.push(d.id);
+  if(success) state.practice.errors=state.practice.errors.filter(id=>id!==d.id);
+  save();
+  box.innerHTML=`<div class="status ${success?'good':'bad'}">${success?'✓ Верно!':'Есть неточности.'} ${success?'Цепочка рассуждения собрана правильно.':'Смотри объяснение ниже: оно покажет, что произошло с существительным.'}</div>`;
+  const changed=d.mode==='s';
+  const typeName=changed?'Согласование':'Управление';
+  const roleText=changed?'определяемое слово':'зависимое от причастия слово';
+  let table='';
+  for(let j=0;j<5;j++) table+=`<div class="case-row"><span class="case-mark">${CASES[j]}</span><span class="case-word"><span class="preposition">${j===4?'о ':''}</span><span class="p">${d.mode==='u'?'не ':'не'}${d.p[j]}</span> <span class="n">${noun(d,j)}</span></span></div>`;
+  document.querySelector('#feedback').innerHTML=`<div class="feedback"><h2>Разгадка</h2><div class="feedback-summary"><h3>${changed?'↗ Согласование':'🔒 Управление'}</h3><p>${changed?`Существительное меняется вместе с причастием: <b>${noun(d,0)} → ${noun(d,i)}</b>. <b>Существительное главное</b>, причастие с ним согласуется.`:`Причастие изменило падеж, а существительное сохранило прежнюю форму: <b>${noun(d,0)} → ${noun(d,i)}</b>. <b>Причастие главное</b>, существительное зависит от него и остаётся в винительном падеже.`}</p><div class="verdict"><span class="pill">${typeName}</span><span class="pill">Существительное — ${roleText}</span><span class="pill">НЕ пишем ${changed?'слитно':'раздельно'}</span></div><p><b>Итог:</b> ${formatted(d,0,true)}.</p></div><div class="checklist">${checks.map(x=>`<div class="check ${x.ok?'correct':'incorrect'}"><b>${x.ok?'✓':'✕'} ${x.label}</b>${x.ok?'Верно':'Правильно: '+x.right}</div>`).join('')}</div><div class="review-title">Падежный ряд</div><div class="rowset">${table}</div><p class="keyline">И. — именительный, Р. — родительный, Д. — дательный, Т. — творительный, П. — предложный.</p><div class="actions" style="margin-top:22px"><button id="next" class="btn gold">${practicePos+1===practiceSeq.length?'Посмотреть итог':'Следующая карточка →'}</button></div></div>`;
+  for(const node of document.querySelectorAll('select,input[type=radio]')) node.disabled=true;
+  document.querySelector('#check').disabled=true;
+  document.querySelector('#next').onclick=()=>{practicePos++; a={p:'',n:'',type:'',role:'',write:''}; drawPractice();};
+  document.querySelector('#feedback').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function practiceEnd(){
+  const total=Object.keys(state.practice.done).length;
+  const errs=state.practice.errors.length;
+  const excellent=Object.values(state.practice.done).filter(x=>x.success).length;
+  app.innerHTML=`<section class="page"><div class="top"><strong class="count">Проработка завершена</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div><div class="result-n">${total}<span style="font-size:1.1rem;color:var(--muted);font-weight:700"> из 20</span></div><p>Теперь ученик проходит цепочку именно в нужном порядке: <b>связь → вывод о существительном → написание НЕ</b>.</p><div class="result-cards"><span>Верно: ${excellent}</span><span>Осталось повторить: ${errs}</span></div><div class="actions">${errs?'<button class="btn" id="again">Повторить ошибки</button>':''}<button class="btn gold" id="restartAllPractice">Все 20 заново</button></div></section>`;
+  document.querySelector('#homeBtn').onclick=home;
+  const ag=document.querySelector('#again'); if(ag) ag.onclick=()=>{review=true; practiceSeq=[...state.practice.errors]; practicePos=0; a={p:'',n:'',type:'',role:'',write:''}; drawPractice();};
+  document.querySelector('#restartAllPractice').onclick=()=>{if(confirm('Снова пройти все 20 карточек?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a={p:'',n:'',type:'',role:'',write:''};drawPractice();}};
+}
+home();
+})();
+</script>
+</body>
+</html>
