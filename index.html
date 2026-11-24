@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light" />
-<title>Кто здесь главный? — сортер и падежная лаборатория (версия 7)</title>
+<title>Кто здесь главный? — сортер + 20 карточек · версия 13</title>
 <style>
 :root{
   --plum:#382242;--plum-deep:#291532;--plum-light:#6d5078;
@@ -178,13 +178,125 @@ header{border-bottom:5px solid #efba55;background:radial-gradient(circle at 92% 
   .slot select{font-size:.77rem}
 }
 
+
+/* Immediate, non-spoiling validation of the noun form. */
+.slot.noun-slot.noun-mistake{border-color:#e24b62!important;background:linear-gradient(125deg,#ffe4e9,#fff1e7)!important;box-shadow:0 0 0 4px #ffb8c6,0 0 28px rgba(220,48,85,.38)!important;animation:nounAlert .8s ease-in-out 3 alternate}
+.slot.noun-slot.noun-mistake select{border-color:#d63957!important;background:#fff8fa;color:#8c1732}
+@keyframes nounAlert {from{box-shadow:0 0 0 3px #f5a0b4,0 0 12px rgba(211,46,84,.24)}to{box-shadow:0 0 0 6px #fbc5d0,0 0 35px rgba(211,46,84,.48)}}
+@media(prefers-reduced-motion:reduce){.slot.noun-slot.noun-mistake{animation:none}}
+.instant-form-note{margin-top:14px;border:2px solid #e45c73;border-left:8px solid #d93656;background:#fff1f4;border-radius:16px;padding:13px 16px;color:#89213d;font-weight:750}
+.instant-form-note p{margin:6px 0 10px;font-size:.95rem}
+.instant-form-note .btn{background:#fff;color:#7d2a42;border-color:#e8a1b0}
+.context-bridge{margin-top:12px;background:linear-gradient(112deg,#f3edf9,#e7faf2);border:2px solid #ad9ac1;border-radius:18px;padding:15px}
+.context-bridge h3{margin:0 0 11px;color:#492b59;font-size:1.05rem}
+.context-lines{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.context-lines>div{border-radius:12px;padding:12px;border:2px solid #d8cadd;background:#fff}
+.context-lines>div:last-child{border-color:#a6d8c6}
+.context-lines .context-tag{font-size:.72rem;color:#705c79;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+.context-lines p{margin:7px 0 0;font-size:1.04rem;font-weight:650}
+.context-question{margin:10px 0 0;font-size:.94rem;color:#5a4d5e}
+.help-toggle{margin-top:12px;display:flex;justify-content:flex-end}
+@media(max-width:700px){.context-lines{grid-template-columns:1fr}}
+
+
+/* Версия 9: самостоятельная смысловая проверка при ошибке в форме существительного */
+.sentence-workshop{margin-top:16px;padding:18px;border:3px solid #8d679c;border-radius:21px;background:linear-gradient(115deg,#f9f0ff,#fff2d4);box-shadow:5px 5px 0 #e6d3eb}
+.sentence-workshop h3{margin:0 0 8px;color:#47214f;font-size:1.22rem}
+.sentence-workshop p{margin:8px 0}
+.sentence-task{display:inline-flex;gap:8px;flex-wrap:wrap;padding:7px 12px;border:2px solid #d8b8e0;background:white;border-radius:13px;color:#4b2855;font-weight:900;font-size:1.1rem}
+.sentence-workshop label[for="ownSentence"]{display:block;margin-top:13px;margin-bottom:7px;font-size:.99rem;font-weight:850;color:#463049}
+.sentence-workshop textarea{display:block;width:100%;min-height:95px;resize:vertical;line-height:1.5;padding:13px 15px;border:2px solid #ad8fb4;border-radius:14px;background:#fff;color:#291932;font:inherit;font-size:1.02rem;box-shadow:inset 0 2px 5px #46254b12}
+.sentence-workshop textarea:focus{border-color:#0c9f8b;outline:3px solid #8cddcd;outline-offset:1px}
+.sentence-workshop .question{font-size:1.05rem;font-weight:900;color:#482450;margin-top:16px}
+.sentence-workshop .answer-options{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sentence-workshop .answer-options button{min-width:160px;min-height:48px;padding:10px 18px;border:2px solid #bca5c6;border-radius:999px;background:white;color:#493351;font-weight:900}
+.sentence-workshop .answer-options button[aria-pressed="true"]{border-color:#087d73;color:#006052;background:#d6f8e9;box-shadow:0 0 0 2px #bbebe0}
+.sentence-workshop .answer-options button:focus-visible{outline:3px solid #e8a53c;outline-offset:2px}
+.sentence-workshop .work-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}
+.sentence-workshop .work-result{padding:13px 15px;border-radius:14px;margin-top:12px;border:2px solid #94cdbd;background:#effdf6;color:#164d42;font-weight:750}
+.sentence-workshop .work-result.try-again{background:#fff0f2;border-color:#eda8b6;color:#823248}
+.sentence-workshop .small-note{color:#6e5a72;font-size:.86rem;margin-top:10px}
+.sentence-workshop .work-example{margin-top:13px;border:2px solid #edc475;background:#fff8e8;border-radius:13px;padding:13px;font-weight:750}
+/* Необязательное выделение грамматической основы в собственном предложении */
+.optional-sentence{margin-top:16px;border:2px dashed #c6a4ce;background:#fffdfd;border-radius:17px;padding:14px}
+.optional-sentence summary{cursor:pointer;color:#5c3765;font-weight:850;list-style-position:inside}
+.optional-sentence[open] summary{margin-bottom:10px}
+.optional-sentence .optional-caption{font-size:.91rem;color:#725b74;margin:6px 0 10px}
+.markup-box{margin-top:12px;border:2px solid #cdb4d0;background:#fff;border-radius:15px;padding:12px}
+.markup-head{font-weight:850;color:#53305e;margin-bottom:8px}
+.marking-tools{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.mark-tool{border:2px solid #d8c6db;border-radius:999px;min-height:43px;padding:7px 14px;background:#fff;color:#4a3550;font-weight:800}
+.mark-tool.subject{border-color:#9de2d3;background:#e8faf3;color:#005b55}
+.mark-tool.predicate{border-color:#ebc27c;background:#fff3da;color:#7c4c08}
+.mark-tool[aria-pressed="true"]{box-shadow:0 0 0 3px #80618a,inset 0 0 0 1px #fff}
+.markup-preview{min-height:57px;background:#faf9fd;border:1px solid #eadfec;border-radius:12px;padding:14px 12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.95;font-size:1.12rem}
+.mark-word{border:0;background:transparent;color:#292333;font:inherit;font-weight:550;padding:0 1px;border-radius:4px;cursor:pointer;line-height:1.6}
+.mark-word:hover{background:#f3e6fa}
+.mark-word.subject{text-decoration:underline;text-decoration-style:solid;text-decoration-color:#007f70;text-decoration-thickness:3px;text-underline-offset:5px;background:#e7f9f2}
+.mark-word.predicate{text-decoration:underline;text-decoration-style:double;text-decoration-color:#b36b0b;text-decoration-thickness:3px;text-underline-offset:6px;background:#fff2d7}
+.markup-help{font-size:.85rem;color:#746477;margin:9px 0 0}
+.mark-legend{display:inline-flex;gap:16px;flex-wrap:wrap;color:#65506c;font-size:.85rem}
+.mark-legend b:first-child{text-decoration:underline;text-decoration-color:#007f70;text-decoration-thickness:2px;text-underline-offset:4px}
+.mark-legend b:last-child{text-decoration:underline;text-decoration-style:double;text-decoration-color:#b36b0b;text-decoration-thickness:2px;text-underline-offset:4px}
+@media(max-width:700px){.optional-sentence{padding:10px}.markup-preview{padding:10px;font-size:1rem}.marking-tools{gap:6px}.mark-tool{font-size:.88rem;padding:6px 10px}}
+
+@media(max-width:700px){.sentence-workshop{padding:12px}.sentence-workshop .answer-options button{flex:1 1 135px;min-width:0}}
+
+
+/* Два независимых маршрута с первого экрана */
+.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:22px 0 14px}
+.mode-card{border-radius:22px;padding:22px;border:2px solid;display:flex;flex-direction:column;gap:11px;min-width:0}
+.mode-card.sort-mode{background:linear-gradient(135deg,#e1f8f1,#f4fffb);border-color:#80d4c3}
+.mode-card.train-mode{background:linear-gradient(135deg,#fff0c2,#fff9e8);border-color:#eabf63}
+.mode-card .mode-kicker{font-size:.78rem;font-weight:900;letter-spacing:.08em;color:var(--plum-light);text-transform:uppercase}
+.mode-card h2{font-size:clamp(1.23rem,2.5vw,1.55rem);line-height:1.25;color:var(--plum);margin:0}
+.mode-card p{font-size:.98rem;line-height:1.55;margin:0;flex:1}
+.mode-card .btn{align-self:flex-start;margin-top:5px}
+@media(max-width:710px){.mode-grid{grid-template-columns:1fr}.mode-card{padding:17px}}
+/* Версия 12: из удачного смыслового вывода — в продолжение тренировки */
+.insight-actions{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.insight-next{background:linear-gradient(110deg,#007f78,#009a87);color:#fff;border:2px solid #006f68;box-shadow:0 5px 0 #b1e2d6,0 0 0 3px #e7f8f1;font-size:1.03rem;min-height:52px}
+.insight-next:hover:not(:disabled){box-shadow:0 7px 0 #b1e2d6,0 0 0 3px #e7f8f1}
+.insight-applied{margin-top:17px;padding:15px 17px;border:2px solid #00a18c;background:linear-gradient(100deg,#e4faf1,#fff2cf);color:#095d54;border-radius:16px;box-shadow:0 4px 0 #e2f0da}
+.insight-applied b{display:block;font-size:1.06rem}
+.insight-applied p{margin:5px 0 0;color:#38564e}
+#inferenceHeading{scroll-margin-top:20px}
+@media(max-width:700px){.insight-actions .btn{width:100%;text-align:center}}
+
+/* Версия 13: семантический красный сигнал непосредственно в «Стало» */
+.compare .comparison.changed-incorrect{
+  position:relative;border:3px solid #e23c63!important;
+  background:linear-gradient(120deg,#fff3f6,#fff0e8)!important;
+  box-shadow:0 0 0 4px #ffd1dc,0 0 25px rgba(220,48,85,.28);
+  animation:nounAlert 0.9s ease-in-out 2 alternate;
+}
+.question-beacon{display:inline-flex;justify-content:center;align-items:center;
+  width:36px;height:36px;border-radius:50%;margin-left:8px;
+  background:#e13c5e;color:white;font-weight:950;font-size:1.45rem;
+  box-shadow:0 0 0 5px #ffd2db,0 0 18px #e35a75;
+  animation:questionGlow 1.2s ease-in-out infinite alternate;
+}
+@keyframes questionGlow{from{box-shadow:0 0 0 4px #ffbccb,0 0 7px #e35a75}to{box-shadow:0 0 0 7px #ffe0e7,0 0 25px #e35a75}}
+.sense-question{margin-top:14px;padding:17px 18px;border-radius:18px;
+  background:#fff0f3;border:2px solid #e95a76;border-left:9px solid #db365a;
+  color:#80203c;font-size:1.09rem;font-weight:850;line-height:1.55;
+  box-shadow:0 4px 0 #fad5df}
+.sense-question strong{display:block;color:#b4274b;font-size:1.01rem;margin-bottom:4px}
+.sentence-workshop .work-result{background:#f6f0fc;border-color:#c2a4d2;color:#4d2d59}
+.sentence-workshop .work-result.try-again{background:#fff3f1;border-color:#efb7b1;color:#843547}
+.route-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.route-options .btn{width:100%;white-space:normal;text-align:center;min-height:62px;padding:12px}
+.route-options .btn.alt{border:2px solid #bd95c5;background:white;color:#54315c}
+.route-note{font-size:.89rem;color:#665369;margin:12px 0 4px}
+@media(max-width:710px){.route-options{grid-template-columns:1fr}.question-beacon{width:30px;height:30px;font-size:1.2rem}}
+@media(prefers-reduced-motion:reduce){.question-beacon,.compare .comparison.changed-incorrect{animation:none}}
 </style>
 </head>
 <body>
 <header>
   <div class="sup">ОРФОГРАФИЧЕСКАЯ ЛАБОРАТОРИЯ</div>
   <h1>Кто здесь главный?</h1>
-  <p>Сначала быстрый сортер, затем — при необходимости — подробная проработка 20 карточек.</p>
+  <p>Два режима на выбор: быстрый сортер или подробная падежная тренировка.</p>
 </header>
 <main id="app"></main>
 <footer>Тренажёр показывает, как по поведению существительного отличить зависимое слово от определяемого и выбрать написание НЕ с причастием.</footer>
@@ -212,8 +324,20 @@ const D=[
 {id:19,mode:'u',p:['решивший','решившего','решившему','решившим','решившем'],n:['пример','примера','примеру','примером','примере'],fixed:0,q:'решивший (что?) пример'},
 {id:20,mode:'s',p:['пришедшие','пришедших','пришедшим','пришедшими','пришедших'],n:['гости','гостей','гостям','гостями','гостях'],q:'гости (какие?) пришедшие'}
 ];
+const ABSURD_QUESTIONS={
+  1:'Экзамен, который чего-то не сдал? А что именно мог сдать сам экзамен?',
+  3:'Фильм, который чего-то не досмотрел? Что мог бы смотреть сам фильм?',
+  4:'Задания, которые чего-то не выполнили? Что могли выполнить сами задания?',
+  7:'Награды, которые ничего не получили? Что могли получить сами награды?',
+  9:'Подарок, который ничего не выбрал? Что мог бы выбрать сам подарок?',
+  11:'План, который ничего не выполняет? Что мог бы выполнять сам план?',
+  14:'Анкеты, которые ничего не заполнили? Что могли заполнить сами анкеты?',
+  16:'Договор, который ничего не подписал? Что мог подписать сам договор?',
+  18:'Письма, которые ничего не отправили? Что могли отправить сами письма?',
+  19:'Пример, который ничего не решил? Что мог решить сам пример?'
+};
 const CASES=['И.','Р.','Д.','Т.','П.'];
-const KEY='participle-head-noun-lab-v7';
+const KEY='participle-head-noun-lab-v13';
 const app=document.querySelector('#app');
 const load=()=>{try{const o=JSON.parse(localStorage.getItem(KEY));if(o)return o}catch(e){}return {sorter:{done:false,index:0,left:[],right:[],errors:[]},practice:{done:{},errors:[]}}};
 let state=load();
@@ -224,31 +348,61 @@ const answerPart=(d,i)=>`${i===4?'о ':''}${d.mode==='u'?'не ': 'не'}${d.p[i
 const formatted=(d,i,solved=false)=>`${solved?answerPart(d,i):part(d,i)} ${noun(d,i)}`;
 const currentSorter=()=>D[state.sorter.index]||null;
 let practiceSeq=D.map(x=>x.id), practicePos=0, review=false, a={};
+const emptyAnswer=()=>({p:'',n:'',type:'',role:'',write:'',hadNounMistake:false,sentence:'',subjectGuess:'',subjectChecked:false,marks:{},markMode:'subject',sentenceExpanded:false,insightApplied:false});
+const escapeHTML=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const currentPractice=()=>D.find(d=>d.id===practiceSeq[practicePos]);
+// Показываем слова отдельными кликабельными элементами. Никакой автоматической
+// синтаксической проверки развернутого предложения здесь нет.
+function sentenceTokens(sentence){return sentence.match(/\p{L}+(?:[-’']\p{L}+)*|\d+|[^\p{L}\d\s]+|\s+/gu)||[];}
+function markupHTML(){
+  if(!a.sentence.trim())return '<span class="placeholder">Здесь появятся слова написанного предложения.</span>';
+  return sentenceTokens(a.sentence).map((tok,i)=>{
+    if(!/^[\p{L}\d]/u.test(tok)) return escapeHTML(tok);
+    const mark=a.marks[i]||'';
+    return `<button class="mark-word ${mark}" type="button" data-word-index="${i}" aria-pressed="${!!mark}" title="Выделить слово как ${a.markMode==='subject'?'подлежащее':'сказуемое'}">${escapeHTML(tok)}</button>`;
+  }).join('');
+}
+
 function radio(name,options,disabled=false,cls=''){return `<div class="choice-row" role="group">${options.map(([key,label])=>`<div class="choice ${cls}"><input type="radio" name="${name}" id="${name}-${key}" value="${key}" ${a[name]===key?'checked':''} ${disabled?'disabled':''}><label for="${name}-${key}">${label}</label></div>`).join('')}</div>`}
 function home(){
   const errCount=state.sorter.errors.length;
   const practiceDone=Object.keys(state.practice.done).length;
+  const practiceLabel=practiceDone===20?'Пройти тренировку заново':practiceDone>0?'Продолжить тренировку':'Сразу к тренировке';
   app.innerHTML=`<section class="page">
-    <div class="top"><strong class="count">Стартовый экран</strong>${state.sorter.done?'<button class="btn danger tiny" id="resetAll">Сбросить всё</button>':''}</div>
-    <p class="lead">Сначала ученик быстро распределяет словосочетания: <b>нет зависимого слова — пишем слитно</b> / <b>есть зависимое слово — пишем раздельно</b>. Если ошибки были, переходим к подробной проработке.</p>
-    <div class="intro-grid">
-      <div><span class="num">1</span><b>Быстрый сортер</b><p>20 карточек появляются одна за другой. Нужно отправить их влево или вправо.</p></div>
-      <div><span class="num">2</span><b>Наблюдение за формами</b><p>Во второй части ученик меняет форму причастия и смотрит, меняется существительное или нет.</p></div>
-      <div><span class="num">3</span><b>Вывод без занудства</b><p>Сначала связь, потом вывод о слове, и только потом — написание НЕ.</p></div>
+    <div class="top"><strong class="count">Выбери, с чего начать</strong>${(state.sorter.done||practiceDone>0)?'<button class="btn danger tiny" id="resetAll">Сбросить всё</button>':''}</div>
+    <p class="lead">Рекомендуем сначала пройти <b>сортер</b> из 20 словосочетаний, а затем — при желании — <b>падежную тренировку</b>. Но можно сразу начать с тренировки, ничего не распределяя.</p>
+    <div class="mode-grid">
+      <div class="mode-card sort-mode">
+        <span class="mode-kicker">Быстрая проверка · 20 карточек</span>
+        <h2>Сортер</h2>
+        <p>Распредели словосочетания: <b>нет зависимого слова — слитно</b>; <b>есть зависимое слово — раздельно</b>. После прохождения можно посмотреть ошибки.</p>
+        <button class="btn" id="startSorter">${state.sorter.done?'Пройти сортер ещё раз':'Пройти сортер →'}</button>
+      </div>
+      <div class="mode-card train-mode">
+        <span class="mode-kicker">Подробная работа · 20 карточек</span>
+        <h2>Падежная тренировка</h2>
+        <p>Проверь, согласуется причастие с существительным или управляет им: измени падеж, определи связь и выбери написание НЕ.</p>
+        <button class="btn gold" id="startPracticeDirect">${practiceLabel} →</button>
+      </div>
     </div>
-    <div class="actions">
-      <button class="btn" id="startSorter">${state.sorter.done?'Открыть сортер снова':'Начать сортер'}</button>
-      ${state.sorter.done && errCount>0 ? '<button class="btn gold" id="seeErrors">Посмотреть ошибки →</button>':''}
-      ${practiceDone>0 ? '<button class="btn alt" id="continuePractice">Продолжить проработку</button>':''}
-    </div>
-    ${state.sorter.done ? `<div class="summary-box"><h2>Что уже есть</h2><p><b>Сортер пройден.</b> Ошибок: ${errCount}.</p>${errCount===0?'<p><b>Были ошибки?</b> Отлично, ошибок не было.</p>':'<p><b>Были ошибки.</b> Переходим к проработке.</p>'}${practiceDone?`<p>Карточек проработано: <b>${practiceDone} из 20</b>.</p>`:''}</div>`:''}
-    <p class="hint">Подсказка: если ученик уже уверенно видит зависимое слово, можно ограничиться сортером.</p>
+    ${state.sorter.done?`<div class="summary-box"><h2>Результат сортера</h2><p>Ошибок: <b>${errCount}</b>. ${errCount===0?'Отлично, ошибок не было.':'Можно посмотреть, какие карточки вызвали затруднения.'}</p><p><b>Рекомендация:</b> ${errCount?'пройти падежную тренировку, чтобы разобраться в связях слов.':'для закрепления можно пройти тренировку, но это необязательно.'}</p><div class="actions">${errCount?'<button class="btn alt" id="seeErrors">Посмотреть ошибки</button>':''}<button class="btn gold" id="recommendPractice">${practiceDone>0?'К тренировке':'Перейти к тренировке'} →</button></div></div>`:''}
+    ${practiceDone>0?`<p class="hint">В тренировке пройдено ${practiceDone} из 20 карточек. Можно продолжить с первой непройденной.</p>`:''}
   </section>`;
-  if(state.sorter.done) document.querySelector('#resetAll').onclick=resetAll;
-  document.querySelector('#startSorter').onclick=()=>{if(state.sorter.done){state.sorter={done:false,index:0,left:[],right:[],errors:[]};save();} sorter();};
-  const se=document.querySelector('#seeErrors'); if(se) se.onclick=showSorterErrors;
-  const cp=document.querySelector('#continuePractice'); if(cp) cp.onclick=()=>startPractice(false,false);
+  const reset=document.querySelector('#resetAll');if(reset) reset.onclick=resetAll;
+  document.querySelector('#startSorter').onclick=()=>{if(state.sorter.done){state.sorter={done:false,index:0,left:[],right:[],errors:[]};save();}sorter();};
+  document.querySelector('#startPracticeDirect').onclick=enterPractice;
+  const se=document.querySelector('#seeErrors');if(se)se.onclick=showSorterErrors;
+  const rp=document.querySelector('#recommendPractice');if(rp)rp.onclick=enterPractice;
+}
+function enterPractice(){
+  const completed=Object.keys(state.practice.done).length;
+  if(completed>=20){
+    if(!confirm('Все 20 карточек уже пройдены. Начать тренировку заново?')) return;
+    state.practice={done:{},errors:[]}; save();
+    startPractice(false,true);
+  } else {
+    startPractice(false,false);
+  }
 }
 function resetAll(){if(confirm('Сбросить сортер и все 20 карточек?')){state={sorter:{done:false,index:0,left:[],right:[],errors:[]},practice:{done:{},errors:[]}};save();home();}}
 function sorter(){
@@ -313,7 +467,7 @@ function sortChoose(side){
   }
 }
 function sorterEnd(){
-  state.sorter.done=true; save();
+  state.sorter.done=true;save();
   const errors=state.sorter.errors.length;
   app.innerHTML=`<section class="page">
     <div class="top"><strong class="count">Сортер завершён</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
@@ -321,17 +475,19 @@ function sorterEnd(){
     <div class="result-cards"><span>Ошибок: ${errors}</span><span>Слитно: ${state.sorter.left.length}</span><span>Раздельно: ${state.sorter.right.length}</span></div>
     <div class="summary-box">
       ${errors===0
-        ? '<h2>Были ошибки?</h2><p><b>Отлично, ошибок не было.</b></p>'
-        : `<h2>Были ошибки?</h2><p><b>Да, ${errors}.</b> Сначала посмотрим, в каких словосочетаниях возникли затруднения, а затем перейдём к проработке.</p>`}
+        ? '<h2>Отлично, ошибок не было!</h2><p><b>Можно остановиться на этом.</b> А можно дополнительно пройти падежную тренировку, чтобы закрепить навык.</p>'
+        : `<h2>Есть ошибки: ${errors}</h2><p>Рекомендуем посмотреть ошибочные словосочетания и пройти падежную тренировку. Но выбор за тобой.</p>`}
     </div>
     <div class="actions">
-      ${errors===0?'':'<button class="btn gold" id="seeErrors">Посмотреть ошибки →</button>'}
+      ${errors?'<button class="btn alt" id="seeErrors">Посмотреть ошибки →</button>':''}
+      <button class="btn gold arrow-go" id="goPractice">${errors?'Пройти тренировку →':'Пройти тренировку по желанию →'}</button>
       <button class="btn alt" id="againSorter">Пройти сортер ещё раз</button>
     </div>
   </section>`;
   document.querySelector('#homeBtn').onclick=home;
   document.querySelector('#againSorter').onclick=()=>{state.sorter={done:false,index:0,left:[],right:[],errors:[]};save();sorter();};
-  const se=document.querySelector('#seeErrors'); if(se) se.onclick=showSorterErrors;
+  document.querySelector('#goPractice').onclick=enterPractice;
+  const se=document.querySelector('#seeErrors');if(se)se.onclick=showSorterErrors;
 }
 function showSorterErrors(){
   const mistakes=[...state.sorter.left,...state.sorter.right].filter(x=>!x.ok).sort((a,b)=>a.id-b.id);
@@ -353,7 +509,7 @@ function showSorterErrors(){
         </div>
       </div>`;
     }).join('')}</div>
-    <div class="summary-box"><p><b>Теперь понятно, что стоит потренировать.</b> В следующих 20 карточках сначала меняем формы, затем определяем связь, выясняем, является ли существительное зависимым или определяемым словом, и выбираем написание НЕ.</p></div>
+    <div class="summary-box"><p><b>Теперь видно, что стоит потренировать.</b> При желании переходи к 20 карточкам падежной лаборатории: там сначала меняем формы, затем определяем связь и выбираем написание НЕ.</p></div>
     <div class="errors-actions"><button class="btn gold arrow-go" id="goPractice">Перейти к проработке →</button><button class="btn alt" id="back">Назад к итогу</button></div>
   </section>`;
   document.querySelector('#goPractice').onclick=()=>startPractice(false,true);
@@ -365,7 +521,7 @@ function startPractice(fromErrorsOnly=false, fresh=true){
   if(review && state.sorter.errors.length){practiceSeq=[...state.sorter.errors];}
   else practiceSeq=D.map(x=>x.id);
   if(fresh){practicePos=0;}else{const doneIds=Object.keys(state.practice.done).map(Number); const idx=practiceSeq.findIndex(id=>!doneIds.includes(id)); practicePos=idx===-1?0:idx;}
-  a={p:'',n:'',type:'',role:'',write:''};
+  a=emptyAnswer();
   drawPractice();
 }
 function orderedOptions(d,idx){const vals=[...new Set(d.n)];const rot=(d.id*3+idx)%vals.length;return [...vals.slice(rot),...vals.slice(0,rot)];}
@@ -374,6 +530,11 @@ function drawPractice(){
   const d=currentPractice();
   const i=a.p===''?null:Number(a.p);
   const completed=Object.keys(state.practice.done).length;
+  const nounWrong=!!a.n && i!==null && a.n!==noun(d,i);
+  const subjectCorrect=a.subjectChecked && a.subjectGuess===(d.mode==='u'?'no':'yes');
+  const semanticQuestion=d.mode==='u'
+    ? ABSURD_QUESTIONS[d.id]
+    : `«${part(d,i)} ${a.n}»? К кому или к чему относится эта форма причастия? Произнеси сочетание целиком: подходят ли формы друг к другу?`;
   app.innerHTML=`<section class="page">
     <div class="top"><strong class="count">${review?'Проработка после сортера · ':'Карточка '} ${practicePos+1} из ${practiceSeq.length}</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div>
     <div class="meter"><div style="width:${(review?practicePos/practiceSeq.length:completed/20)*100}%"></div></div>
@@ -382,14 +543,53 @@ function drawPractice(){
     <div class="lab"><div class="lab-header"><b>Падежная лаборатория</b><span>Сравни, как изменяются два слова</span></div>
       <div class="selectors">
         <div class="slot part-slot"><label for="p">Выбери для причастия другой падеж</label><select id="p"><option value="">Выбери форму…</option>${[1,2,3,4].map(j=>`<option value="${j}" ${i===j?'selected':''}>${part(d,j)}</option>`).join('')}</select></div>
-        <div class="slot noun-slot"><label for="n">Какая будет форма существительного?</label><select id="n" ${i===null?'disabled':''}><option value="">Выбери форму…</option>${i===null?'':orderedOptions(d,i).map(val=>`<option value="${val}" ${a.n===val?'selected':''}>${val}</option>`).join('')}</select></div>
+        <div class="slot noun-slot ${nounWrong?'noun-mistake':''}"><label for="n">Какая будет форма существительного?</label><select id="n" ${i===null?'disabled':''}><option value="">Выбери форму…</option>${i===null?'':orderedOptions(d,i).map(val=>`<option value="${val}" ${a.n===val?'selected':''}>${val}</option>`).join('')}</select></div>
       </div>
-      <div class="compare"><div class="comparison"><div class="label-sm">Было</div><div class="phrase-compare"><span class="part-txt">(не)${d.p[0]}</span> <span class="noun-txt">${noun(d,0)}</span></div></div><span class="arrow" aria-hidden="true">→</span><div class="comparison"><div class="label-sm">Стало</div><div class="phrase-compare"><span class="part-txt">${i===null?'<span class="placeholder">…</span>':part(d,i)}</span> <span class="noun-txt">${a.n||'<span class="placeholder">?</span>'}</span></div></div></div>
-      <div class="mini-rule"><span class="dot" aria-hidden="true"></span>Смотри на существительное: меняется оно вместе с причастием или нет.</div>
+      <div class="compare"><div class="comparison"><div class="label-sm">Было</div><div class="phrase-compare"><span class="part-txt">(не)${d.p[0]}</span> <span class="noun-txt">${noun(d,0)}</span></div></div><span class="arrow" aria-hidden="true">→</span><div class="comparison ${nounWrong?'changed-incorrect':''}"><div class="label-sm">Стало ${nounWrong?'<span class="question-beacon" aria-label="Сомнительная форма">?</span>':''}</div><div class="phrase-compare"><span class="part-txt">${i===null?'<span class="placeholder">…</span>':part(d,i)}</span> <span class="noun-txt">${a.n||'<span class="placeholder">?</span>'}</span></div></div></div>
+      ${nounWrong?`
+      <div class="sense-question" role="alert"><strong>${d.mode==='u'?'❓ А если это существительное — главное?':'❓ Подходят ли эти формы друг другу?'}</strong>${semanticQuestion}</div>
+      <div class="sentence-workshop" id="sentenceWorkshop">
+        <h3>Может ли существительное быть подлежащим?</h3>
+        <p>Попробуй придумать своё предложение с теми же словами. Если это существительное — подлежащее, <b>что оно делает?</b></p>
+        <div class="sentence-task"><span class="part-txt">(не)${d.p[0]}</span> <span class="noun-txt">${noun(d,0)}</span></div>
+        <div class="question">Может ли «${noun(d,0)}» быть подлежащим, если сохранить смысл исходного сочетания?</div>
+        <p class="small-note">Можно ответить устно. Предложение записывать не обязательно.</p>
+        <div class="answer-options" role="group" aria-label="Может ли существительное быть подлежащим">
+          <button type="button" id="subjectYes" aria-pressed="${a.subjectGuess==='yes'}">Да</button>
+          <button type="button" id="subjectNo" aria-pressed="${a.subjectGuess==='no'}">Нет</button>
+        </div>
+        <div class="work-actions"><button type="button" class="btn tiny" id="checkSubject">Проверить мой вывод</button></div>
+        <div id="sentenceResponse" aria-live="polite">
+        ${a.subjectChecked?`<div class="work-result ${subjectCorrect?'':'try-again'}">${subjectCorrect?'Вывод принят. Теперь можешь продолжить или перейти дальше.':'Посмотри ещё раз на созданную тобой ситуацию: кто или что совершает действие?'}</div>`:''}
+        </div>
+        <details class="optional-sentence" id="optionalSentence" ${a.sentenceExpanded?'open':''}>
+          <summary>Хочу составить предложение и выделить основу (необязательно)</summary>
+          <p class="optional-caption">Запиши своё предложение, если хочешь. Готового образца здесь нет.</p>
+          <label for="ownSentence">Твоё предложение</label>
+          <textarea id="ownSentence" placeholder="Напиши собственное предложение…" spellcheck="true">${escapeHTML(a.sentence)}</textarea>
+          <div class="markup-box">
+            <div class="markup-head">Выдели грамматическую основу</div>
+            <div class="marking-tools" role="group" aria-label="Инструменты выделения основы">
+              <button type="button" id="markSubject" class="mark-tool subject" aria-pressed="${a.markMode==='subject'}">Подлежащее —</button>
+              <button type="button" id="markPredicate" class="mark-tool predicate" aria-pressed="${a.markMode==='predicate'}">Сказуемое ═</button>
+              <button type="button" id="clearMarks" class="mark-tool">Очистить линии</button>
+            </div>
+            <div class="markup-preview" id="markupPreview" aria-label="Предложение с выделенными членами">${markupHTML()}</div>
+            <p class="markup-help">Нажимай на слова: одна линия — подлежащее, две — сказуемое. Повторный клик снимает выделение.</p>
+          </div>
+        </details>
+        <div class="route-options" role="group" aria-label="Выбери, как продолжить">
+          <button type="button" class="btn insight-next" id="skipToNext">Всё понятно — следующая карточка →</button>
+          <button type="button" class="btn alt" id="applyInsight">Хочу разобраться дальше — к типу связи →</button>
+        </div>
+        <div class="work-actions"><button type="button" class="btn alt tiny" id="fixNounMyself">Исправить форму существительного самому</button></div>
+        <p class="small-note">Можно закончить на этом выводе или пройти все шаги. Записанное предложение и его разметка проверяются с учителем.</p>
+      </div>`:''}
     </div>
-    <h2 class="section-label">2. Сделай вывод по цепочке</h2>
+    ${a.insightApplied&&!nounWrong?`<div class="insight-applied" role="status" id="insightApplied"><b>✓ Можно продолжать. Проверь тип связи.</b><p>Форма существительного исправлена. Следующие выводы сделай самостоятельно.</p></div>`:''}
+    <h2 class="section-label" id="inferenceHeading">2. Сделай вывод по цепочке</h2>
     <div class="conclusion">
-      <div class="side-soft"><div class="subq">Какая здесь связь? <span class="tag">ШАГ 1</span></div>${radio('type', [['u','Управление'],['s','Согласование']], !(a.p && a.n),'')}</div>
+      <div class="side-soft"><div class="subq">Какая здесь связь? <span class="tag">ШАГ 1</span></div>${radio('type', [['u','Управление'],['s','Согласование']], !(a.p && a.n && !nounWrong),'')}</div>
       <div class="side-soft" style="margin-top:14px"><div class="subq">Значит, существительное здесь… <span class="tag">ШАГ 2</span></div>${radio('role', [['dependent','Зависимое от причастия слово'],['main','Определяемое слово']], !a.type, 'emph')}</div>
       <div class="side-soft" style="margin-top:14px"><div class="subq">Поэтому НЕ пишется… <span class="tag">ШАГ 3</span></div>${radio('write', [['apart','Раздельно'],['together','Слитно']], !a.role, 'plum')}</div>
     </div>
@@ -398,16 +598,83 @@ function drawPractice(){
     <div id="feedback" aria-live="polite"></div>
   </section>`;
   document.querySelector('#homeBtn').onclick=home;
-  document.querySelector('#p').onchange=e=>{a={p:e.target.value,n:'',type:'',role:'',write:''};drawPractice();};
-  document.querySelector('#n').onchange=e=>{a.n=e.target.value;a.type='';a.role='';a.write='';drawPractice();};
+  document.querySelector('#p').onchange=e=>{a={...a,p:e.target.value,n:'',type:'',role:'',write:''};drawPractice();};
+  document.querySelector('#n').onchange=e=>{a.n=e.target.value;if(a.n && a.n!==noun(d,Number(a.p)))a.hadNounMistake=true;a.type='';a.role='';a.write='';a.insightApplied=false;drawPractice();};
+  const skipToNext=document.querySelector('#skipToNext');
+  if(skipToNext)skipToNext.onclick=()=>{
+    const id=d.id;
+    // Ученик осознанно пропускает формальную цепочку. Такая карточка не
+    // засчитывается как безошибочная и остаётся доступной в повторении.
+    if(!state.practice.done[id])state.practice.done[id]={success:false,skipped:true};
+    if(!state.practice.errors.includes(id))state.practice.errors.push(id);
+    save();
+    practicePos++;
+    a=emptyAnswer();
+    drawPractice();
+    window.scrollTo({top:0,behavior:'instant'});
+  };
+  const applyInsight=document.querySelector('#applyInsight');
+  if(applyInsight)applyInsight.onclick=()=>{
+    // После верного самостоятельного вывода ученик НЕ застревает в красной рамке.
+    // Исправление формы не отменяет первоначальную ошибку для повторения.
+    a.n=noun(d,Number(a.p));
+    a.insightApplied=true;
+    a.type='';a.role='';a.write='';
+    drawPractice();
+    document.querySelector('#inferenceHeading')?.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  const fixNounMyself=document.querySelector('#fixNounMyself');
+  if(fixNounMyself)fixNounMyself.onclick=()=>{
+    const target=document.querySelector('#n');
+    target?.scrollIntoView({behavior:'smooth',block:'center'});
+    target?.focus({preventScroll:true});
+  };
+  const optionalSentence=document.querySelector('#optionalSentence');
+  if(optionalSentence)optionalSentence.ontoggle=()=>{a.sentenceExpanded=optionalSentence.open;};
+  const ownSentence=document.querySelector('#ownSentence');
+  if(ownSentence)ownSentence.oninput=e=>{
+    a.sentence=e.target.value;
+    a.marks={};
+    // Свободный текст — дополнительный материал, поэтому он не сбрасывает
+    // уже сделанный учеником вывод о синтаксической роли существительного.
+    const preview=document.querySelector('#markupPreview');
+    if(preview)preview.innerHTML=markupHTML();
+  };
+  const preview=document.querySelector('#markupPreview');
+  if(preview)preview.onclick=e=>{
+    const b=e.target.closest('[data-word-index]');
+    if(!b)return;
+    const idx=Number(b.dataset.wordIndex);
+    if(a.marks[idx]===a.markMode)delete a.marks[idx];else a.marks[idx]=a.markMode;
+    preview.innerHTML=markupHTML();
+  };
+  function pickMarkMode(mode){
+    a.markMode=mode;
+    for(const [id,m] of [['markSubject','subject'],['markPredicate','predicate']]){
+      const b=document.querySelector('#'+id);if(b)b.setAttribute('aria-pressed',String(mode===m));
+    }
+  }
+  const ms=document.querySelector('#markSubject');if(ms)ms.onclick=()=>pickMarkMode('subject');
+  const mp=document.querySelector('#markPredicate');if(mp)mp.onclick=()=>pickMarkMode('predicate');
+  const cm=document.querySelector('#clearMarks');if(cm)cm.onclick=()=>{a.marks={};const x=document.querySelector('#markupPreview');if(x)x.innerHTML=markupHTML();};
+  const guessYes=document.querySelector('#subjectYes');
+  const guessNo=document.querySelector('#subjectNo');
+  function guess(value){a.subjectGuess=value;a.subjectChecked=false;drawPractice();}
+  if(guessYes)guessYes.onclick=()=>guess('yes');
+  if(guessNo)guessNo.onclick=()=>guess('no');
+  const checkSubject=document.querySelector('#checkSubject');
+  if(checkSubject)checkSubject.onclick=()=>{
+    if(!a.subjectGuess){const response=document.querySelector('#sentenceResponse');response.innerHTML='<div class="status warn">Выбери «Да» или «Нет». Предложение записывать не обязательно.</div>';return;}
+    a.subjectChecked=true;drawPractice();
+  };
   for(const input of document.querySelectorAll('input[type=radio]')) input.onchange=e=>{a[e.target.name]=e.target.value; if(e.target.name==='type'){a.role='';a.write='';} if(e.target.name==='role'){a.write='';} drawPractice();};
   document.querySelector('#check').onclick=checkPractice;
-  document.querySelector('#restartPractice').onclick=()=>{if(confirm('Пройти все 20 карточек заново?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a={p:'',n:'',type:'',role:'',write:''};drawPractice();}};
+  document.querySelector('#restartPractice').onclick=()=>{if(confirm('Пройти все 20 карточек заново?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a=emptyAnswer();drawPractice();}};
 }
 function checkPractice(){
   const d=currentPractice();
   const box=document.querySelector('#alert');
-  if(a.p===''||!a.n||!a.type||!a.role||!a.write){box.innerHTML='<div class="status warn">Сначала выбери обе формы, затем связь, потом вывод о существительном и только потом написание НЕ.</div>'; return;}
+  if(a.p===''||!a.n||!a.type||!a.role||!a.write){box.innerHTML='<div class="status warn">Выбери формы слов и сделай вывод или вернись к проверке смысла.</div>'; return;}
   const i=Number(a.p);
   const right={n:noun(d,i),type:d.mode,role:d.mode==='u'?'dependent':'main',write:d.mode==='u'?'apart':'together'};
   const checks=[
@@ -417,11 +684,13 @@ function checkPractice(){
     {k:'write',ok:a.write===right.write,label:'Написание НЕ',right:d.mode==='u'?'раздельно':'слитно'}
   ];
   const success=checks.every(x=>x.ok);
-  if(!state.practice.done[d.id]) state.practice.done[d.id]={success}; else state.practice.done[d.id].success=success;
-  if(!success && !state.practice.errors.includes(d.id)) state.practice.errors.push(d.id);
-  if(success) state.practice.errors=state.practice.errors.filter(id=>id!==d.id);
+  const noMistakeFirstTry=success && !a.hadNounMistake;
+  if(!state.practice.done[d.id]) state.practice.done[d.id]={success:noMistakeFirstTry};
+  else state.practice.done[d.id].success=noMistakeFirstTry;
+  if(!noMistakeFirstTry && !state.practice.errors.includes(d.id)) state.practice.errors.push(d.id);
+  if(noMistakeFirstTry) state.practice.errors=state.practice.errors.filter(id=>id!==d.id);
   save();
-  box.innerHTML=`<div class="status ${success?'good':'bad'}">${success?'✓ Верно!':'Есть неточности.'} ${success?'Цепочка рассуждения собрана правильно.':'Смотри объяснение ниже: оно покажет, что произошло с существительным.'}</div>`;
+  box.innerHTML=`<div class="status ${success?'good':'bad'}">${success?'✓ Теперь верно!':'Есть неточности.'} ${success?(a.hadNounMistake?'Форму существительного исправили. Эта карточка попадёт в повторение.':'Цепочка рассуждения собрана правильно.'):'Смотри объяснение ниже: оно покажет, что произошло с существительным.'}</div>`;
   const changed=d.mode==='s';
   const typeName=changed?'Согласование':'Управление';
   const roleText=changed?'определяемое слово':'зависимое от причастия слово';
@@ -430,7 +699,7 @@ function checkPractice(){
   document.querySelector('#feedback').innerHTML=`<div class="feedback"><h2>Разгадка</h2><div class="feedback-summary"><h3>${changed?'↗ Согласование':'🔒 Управление'}</h3><p>${changed?`Существительное меняется вместе с причастием: <b>${noun(d,0)} → ${noun(d,i)}</b>. <b>Существительное главное</b>, причастие с ним согласуется.`:`Причастие изменило падеж, а существительное сохранило прежнюю форму: <b>${noun(d,0)} → ${noun(d,i)}</b>. <b>Причастие главное</b>, существительное зависит от него и остаётся в винительном падеже.`}</p><div class="verdict"><span class="pill">${typeName}</span><span class="pill">Существительное — ${roleText}</span><span class="pill">НЕ пишем ${changed?'слитно':'раздельно'}</span></div><p><b>Итог:</b> ${formatted(d,0,true)}.</p></div><div class="checklist">${checks.map(x=>`<div class="check ${x.ok?'correct':'incorrect'}"><b>${x.ok?'✓':'✕'} ${x.label}</b>${x.ok?'Верно':'Правильно: '+x.right}</div>`).join('')}</div><div class="review-title">Падежный ряд</div><div class="rowset">${table}</div><p class="keyline">И. — именительный, Р. — родительный, Д. — дательный, Т. — творительный, П. — предложный.</p><div class="actions" style="margin-top:22px"><button id="next" class="btn gold">${practicePos+1===practiceSeq.length?'Посмотреть итог':'Следующая карточка →'}</button></div></div>`;
   for(const node of document.querySelectorAll('select,input[type=radio]')) node.disabled=true;
   document.querySelector('#check').disabled=true;
-  document.querySelector('#next').onclick=()=>{practicePos++; a={p:'',n:'',type:'',role:'',write:''}; drawPractice();};
+  document.querySelector('#next').onclick=()=>{practicePos++; a=emptyAnswer(); drawPractice();};
   document.querySelector('#feedback').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function practiceEnd(){
@@ -439,8 +708,8 @@ function practiceEnd(){
   const excellent=Object.values(state.practice.done).filter(x=>x.success).length;
   app.innerHTML=`<section class="page"><div class="top"><strong class="count">Проработка завершена</strong><button class="btn alt tiny" id="homeBtn">На главную</button></div><div class="result-n">${total}<span style="font-size:1.1rem;color:var(--muted);font-weight:700"> из 20</span></div><p>Теперь ученик проходит цепочку именно в нужном порядке: <b>связь → вывод о существительном → написание НЕ</b>.</p><div class="result-cards"><span>Верно: ${excellent}</span><span>Осталось повторить: ${errs}</span></div><div class="actions">${errs?'<button class="btn" id="again">Повторить ошибки</button>':''}<button class="btn gold" id="restartAllPractice">Все 20 заново</button></div></section>`;
   document.querySelector('#homeBtn').onclick=home;
-  const ag=document.querySelector('#again'); if(ag) ag.onclick=()=>{review=true; practiceSeq=[...state.practice.errors]; practicePos=0; a={p:'',n:'',type:'',role:'',write:''}; drawPractice();};
-  document.querySelector('#restartAllPractice').onclick=()=>{if(confirm('Снова пройти все 20 карточек?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a={p:'',n:'',type:'',role:'',write:''};drawPractice();}};
+  const ag=document.querySelector('#again'); if(ag) ag.onclick=()=>{review=true; practiceSeq=[...state.practice.errors]; practicePos=0; a=emptyAnswer(); drawPractice();};
+  document.querySelector('#restartAllPractice').onclick=()=>{if(confirm('Снова пройти все 20 карточек?')){state.practice={done:{},errors:[]};save();review=false;practiceSeq=D.map(x=>x.id);practicePos=0;a=emptyAnswer();drawPractice();}};
 }
 home();
 })();
